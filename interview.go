@@ -16,7 +16,11 @@ func main() {
 	// Open the CSV file
 	csvfile, err := os.Open("customers.csv")
 	if err != nil {
-		log.Fatal(err)
+		if os.IsNotExist(err) {
+			log.Fatal("File does not exist.")
+		} else {
+			log.Fatal(err) // Other errors
+		}
 	}
 	defer csvfile.Close()
 
