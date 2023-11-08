@@ -40,6 +40,11 @@ func CountDomains(reader io.Reader) ([]KeyValue, error) {
 			return nil, fmt.Errorf("an error occured while reading the CSV file: %v", err)
 		}
 
+		// Check if the record is empty (this would be the case for an empty line)
+		if len(record) == 0 {
+			continue // Skip this record and continue to the next one.
+		}
+
 		// Extract the email from the record.
 		email := record[2]
 		// Check if the email contains the "@" character.
