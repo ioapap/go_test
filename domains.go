@@ -2,8 +2,9 @@ package main
 
 import (
 	"encoding/csv" // csv package for parsing CSV files.
-	"io" // basic interfaces for I/O operations
-	"sort" // for sorting slices.
+	"fmt"
+	"io"      // basic interfaces for I/O operations
+	"sort"    // for sorting slices.
 	"strings" // for string manipulation functions
 )
 
@@ -33,7 +34,10 @@ func CountDomains(reader io.Reader) ([]KeyValue, error) {
 			break // If the end of the file is reached, break out of the loop.
 		}
 		if err != nil {
-			return nil, err // Return the error to be handled by the caller.
+			if _, ok := err.(*csv.ParseError); ok { // Check if the error is a parsing one.
+				return nil, fmt.Errorf("file contains malformed CSV data: %v", err)
+			}
+			return nil, fmt.Errorf("an error occured while reading the CSV file: %v", err)
 		}
 
 		// Extract the email from the record.
